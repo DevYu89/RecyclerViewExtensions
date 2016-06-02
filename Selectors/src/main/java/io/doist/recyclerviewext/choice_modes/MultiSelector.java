@@ -39,6 +39,22 @@ public class MultiSelector extends Selector {
         }
     }
 
+    public void setSelected(long[] ids, boolean selected, boolean notify) {
+        boolean changed = false;
+        for (long id : ids) {
+            if ((selected && mSelectedIds.add(id)) || (!selected && mSelectedIds.remove(id))) {
+                changed = true;
+                if (notify) {
+                    notifyItemChangedIfVisible(id);
+                }
+            }
+        }
+
+        if (changed && mObserver != null) {
+            mObserver.onSelectionChanged(this);
+        }
+    }
+
     public boolean isSelected(long id) {
         return mSelectedIds.contains(id);
     }
